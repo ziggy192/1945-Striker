@@ -1,25 +1,38 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 /**
  * Created by Nghia on 10/2/2016.
  */
-public class GameWindow extends Frame {
+public class GameWindow extends Frame implements Runnable {
+
+    private static final int BACKGROUND_WIDTH = 800;
+    private static final int BACKGROUND_HEIGHT = 600;
+
     Image backgroundImage = null;
-    Image playerPlane = null;
-    Image playerPlane2 = null;
-    private int playerPlaneX = 365;
-    private int playerPlaneY = 500;
-    private int playerPlane2X = 365;
-    private int playerPlane2Y = 400;
+    Image backBufferImage= null;
+
+    Plane playerPlane ;
+    Plane playerPlane2;
+    private int MOVE_DISTANCE= 10;
 
 
-    public GameWindow(){
+
+    public GameWindow() throws IOException  {
+        backBufferImage = new BufferedImage(BACKGROUND_WIDTH, BACKGROUND_HEIGHT,BufferedImage.TYPE_INT_ARGB );
+
+        playerPlane = new Plane(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT*7/8,
+                        ImageIO.read(new File("resources/plane3.png")));
+        playerPlane2 = new Plane(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT*7/8-100,
+                        ImageIO.read(new File("resources/plane2.png")));
+
+
         this.setVisible(true);
-        this.setSize(800,600);
+        this.setSize(BACKGROUND_WIDTH,BACKGROUND_HEIGHT);
         this.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -71,9 +84,35 @@ public class GameWindow extends Frame {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                playerPlane2X=e.getXOnScreen()-35;
-                playerPlane2Y=e.getYOnScreen()-25;
-                repaint();
+            playerPlane2.mouseMoved(e);
+            }
+        });
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                playerPlane2.mouseClicked(e);
+
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
             }
         });
         this.addKeyListener(new KeyListener() {
@@ -84,31 +123,7 @@ public class GameWindow extends Frame {
 
                 @Override
                 public void keyPressed(KeyEvent e) {
-                    System.out.println("Key Pressed");
-                    switch (e.getKeyCode()){
-                        case KeyEvent.VK_RIGHT:
-                            System.out.println("Key Right");
-                            playerPlaneX += 10;
-                            repaint();
-                            break;
-                        case KeyEvent.VK_LEFT:
-                            System.out.println("Key Left");
-                            playerPlaneX -=10;
-                            repaint();
-                            break;
-                        case KeyEvent.VK_UP:
-                            System.out.println("Key Up");
-                            playerPlaneY -=10;
-                            repaint();
-                            break;
-                        case KeyEvent.VK_DOWN:
-                            System.out.println("Key down");
-                            playerPlaneY +=10;
-                            repaint();
-                            break;
-
-
-                    }
+                    playerPlane.keyPressed(e);
                 }
 
             @Override
@@ -120,8 +135,7 @@ public class GameWindow extends Frame {
             backgroundImage=
             ImageIO.read(new File("resources/background.png"));
             System.out.println("Loaded backgroundImage");
-            playerPlane = ImageIO.read(new File("resources/plane3.png"));
-            playerPlane2 = ImageIO.read(new File("resources/plane2.png"));
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -132,10 +146,41 @@ public class GameWindow extends Frame {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        g.drawImage(backgroundImage, 0, 0, 800,600, null);
-        g.drawImage(playerPlane,playerPlaneX,playerPlaneY ,null);
-        g.drawImage(playerPlane2,playerPlane2X,playerPlane2Y ,null);
-
         System.out.println("draw background ");
+    }
+
+    @Override
+    public void update(Graphics g) {
+        Graphics backBufferGraphics=  backBufferImage.getGraphics();
+
+
+        backBufferGraphics.drawImage(backgroundImage, 0, 0, BACKGROUND_WIDTH,BACKGROUND_HEIGHT, null);
+        playerPlane.drawImage(backBufferGraphics);
+        playerPlane2.drawImage(backBufferGraphics);
+        if (playerPlane.hasBullet())
+            playerPlane.setBullet(backBufferGraphics);
+        if (playerPlane2.hasBullet())
+            playerPlane2.setBullet(backBufferGraphics);
+//        playerPlane.setBullet();
+
+
+
+        g.drawImage(backBufferImage, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT,null);
+    }
+
+    @Override
+    public void run() {
+        while (true){
+
+            try {
+                Thread.sleep(17);
+//                new Bullet();
+                repaint();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+        }
     }
 }

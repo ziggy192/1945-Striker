@@ -6,11 +6,11 @@ import java.awt.*;
 public class Bullet {
     public static final int WIDTH = 17;
     public static final int HEIGHT = 33;
-    private int x;
-    private int y;
-    private Image image;
-
     private static final int SPEED = 5;
+    private int x;
+    private Image image;
+    private int y;
+
 
     public Bullet() {
 
@@ -21,10 +21,12 @@ public class Bullet {
         this.y = y;
         this.image = image;
     }
-    public boolean exists(){
-        if (this==null) return false;
+
+    public boolean exists() {
+        if (this == null) return false;
         return true;
     }
+
     public int getX() {
         return x;
     }
@@ -36,16 +38,16 @@ public class Bullet {
     public Image getImage() {
         return image;
     }
-    public void fly(){
-        y-=SPEED;
-    }
 
-    public void drawImage(Graphics g){
-        g.drawImage(image,x,y,WIDTH,HEIGHT,null);
-
+    public void fly() {
+        y -= SPEED;
     }
 
 
+    public void drawImage(Graphics g) {
+        g.drawImage(image, x, y, WIDTH, HEIGHT, null);
+
+    }
 
 
 }

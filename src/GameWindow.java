@@ -14,25 +14,24 @@ public class GameWindow extends Frame implements Runnable {
     private static final int BACKGROUND_HEIGHT = 600;
 
     Image backgroundImage = null;
-    Image backBufferImage= null;
+    Image backBufferImage = null;
 
-    Plane playerPlane ;
-    Plane playerPlane2;
-    private int MOVE_DISTANCE= 10;
+    //Plane playerPlane3;
+    Plane playerPlane;
+    private int MOVE_DISTANCE = 10;
 
 
+    public GameWindow() throws IOException {
+        backBufferImage = new BufferedImage(BACKGROUND_WIDTH, BACKGROUND_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
-    public GameWindow() throws IOException  {
-        backBufferImage = new BufferedImage(BACKGROUND_WIDTH, BACKGROUND_HEIGHT,BufferedImage.TYPE_INT_ARGB );
-
-        playerPlane = new Plane(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT*7/8,
-                        ImageIO.read(new File("resources/plane3.png")));
-        playerPlane2 = new Plane(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT*7/8-100,
-                        ImageIO.read(new File("resources/plane2.png")));
+//        playerPlane3 = new Plane(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT*7/8,
+//                        ImageIO.read(new File("resources/plane3.png")));
+        playerPlane = new Plane(BACKGROUND_WIDTH / 2, BACKGROUND_HEIGHT * 7 / 8 - 100,
+                ImageIO.read(new File("resources/plane2.png")));
 
 
         this.setVisible(true);
-        this.setSize(BACKGROUND_WIDTH,BACKGROUND_HEIGHT);
+        this.setSize(BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
         this.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -84,13 +83,13 @@ public class GameWindow extends Frame implements Runnable {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-            playerPlane2.mouseMoved(e);
+                playerPlane.mouseMoved(e);
             }
         });
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playerPlane2.mouseClicked(e);
+                playerPlane.mouseClicked(e);
 
 
             }
@@ -116,15 +115,15 @@ public class GameWindow extends Frame implements Runnable {
             }
         });
         this.addKeyListener(new KeyListener() {
-                @Override
-                public void keyTyped(KeyEvent e) {
-                    System.out.println("Key Typed");
-                }
+            @Override
+            public void keyTyped(KeyEvent e) {
+                System.out.println("Key Typed");
+            }
 
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    playerPlane.keyPressed(e);
-                }
+            @Override
+            public void keyPressed(KeyEvent e) {
+//                    playerPlane3.keyPressed(e);
+            }
 
             @Override
             public void keyReleased(KeyEvent e) {
@@ -132,8 +131,8 @@ public class GameWindow extends Frame implements Runnable {
             }
         });
         try {
-            backgroundImage=
-            ImageIO.read(new File("resources/background.png"));
+            backgroundImage =
+                    ImageIO.read(new File("resources/background.png"));
             System.out.println("Loaded backgroundImage");
 
 
@@ -151,26 +150,23 @@ public class GameWindow extends Frame implements Runnable {
 
     @Override
     public void update(Graphics g) {
-        Graphics backBufferGraphics=  backBufferImage.getGraphics();
+        Graphics backBufferGraphics = backBufferImage.getGraphics();
 
 
-        backBufferGraphics.drawImage(backgroundImage, 0, 0, BACKGROUND_WIDTH,BACKGROUND_HEIGHT, null);
+        backBufferGraphics.drawImage(backgroundImage, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, null);
+//        playerPlane3.drawImage(backBufferGraphics);
         playerPlane.drawImage(backBufferGraphics);
-        playerPlane2.drawImage(backBufferGraphics);
-        if (playerPlane.hasBullet())
-            playerPlane.setBullet(backBufferGraphics);
-        if (playerPlane2.hasBullet())
-            playerPlane2.setBullet(backBufferGraphics);
-//        playerPlane.setBullet();
+//        playerPlane3.setBullet();
+//        playerPlane3.drawBullet(backBufferGraphics);
+        playerPlane.drawBullet(backBufferGraphics);
 
 
-
-        g.drawImage(backBufferImage, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT,null);
+        g.drawImage(backBufferImage, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, null);
     }
 
     @Override
     public void run() {
-        while (true){
+        while (true) {
 
             try {
                 Thread.sleep(17);

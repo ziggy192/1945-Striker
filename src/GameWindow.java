@@ -16,18 +16,26 @@ public class GameWindow extends Frame implements Runnable {
     Image backgroundImage = null;
     Image backBufferImage = null;
 
-    //Plane playerPlane3;
-    Plane playerPlane;
+    //PlayerPlane playerPlane3;
+    PlayerPlane playerPlane;
+    EnemyPlane enemyPlane;
     private int MOVE_DISTANCE = 10;
 
 
     public GameWindow() throws IOException {
         backBufferImage = new BufferedImage(BACKGROUND_WIDTH, BACKGROUND_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
-//        playerPlane3 = new Plane(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT*7/8,
+//        playerPlane3 = new PlayerPlane(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT*7/8,
 //                        ImageIO.read(new File("resources/plane3.png")));
-        playerPlane = new Plane(BACKGROUND_WIDTH / 2, BACKGROUND_HEIGHT * 7 / 8 - 100,
+        playerPlane = new PlayerPlane(BACKGROUND_WIDTH / 2, BACKGROUND_HEIGHT * 7 / 8,
                 ImageIO.read(new File("resources/plane2.png")));
+
+        enemyPlane = new EnemyPlane(BACKGROUND_WIDTH * 1 / 4, BACKGROUND_HEIGHT * 1 / 8,
+                ImageIO.read(new File("resources/plane1.png")));
+
+
+        Thread threadEnemyShooting = new Thread(enemyPlane);
+        threadEnemyShooting.start();
 
 
         this.setVisible(true);
@@ -86,6 +94,7 @@ public class GameWindow extends Frame implements Runnable {
                 playerPlane.mouseMoved(e);
             }
         });
+//        this.
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -122,7 +131,7 @@ public class GameWindow extends Frame implements Runnable {
 
             @Override
             public void keyPressed(KeyEvent e) {
-//                    playerPlane3.keyPressed(e);
+                playerPlane.keyPressed(e);
             }
 
             @Override
@@ -159,8 +168,9 @@ public class GameWindow extends Frame implements Runnable {
 //        playerPlane3.setBullet();
 //        playerPlane3.drawBullet(backBufferGraphics);
         playerPlane.drawBullet(backBufferGraphics);
-
-
+        enemyPlane.moveDown();
+        enemyPlane.drawImage(backBufferGraphics);
+        enemyPlane.drawBullet(backBufferGraphics);
         g.drawImage(backBufferImage, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, null);
     }
 
@@ -170,12 +180,10 @@ public class GameWindow extends Frame implements Runnable {
 
             try {
                 Thread.sleep(17);
-//                new Bullet();
                 repaint();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
 
         }
     }

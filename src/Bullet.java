@@ -10,16 +10,18 @@ public class Bullet {
     private int x;
     private Image image;
     private int y;
+    private int direction;
 
 
     public Bullet() {
 
     }
 
-    public Bullet(int x, int y, Image image) {
+    public Bullet(int x, int y, Image image, int direction) {
         this.x = x;
         this.y = y;
         this.image = image;
+        this.direction=direction;
     }
 
     public boolean exists() {
@@ -40,12 +42,14 @@ public class Bullet {
     }
 
     public void fly() {
-        y -= SPEED;
+        y -= SPEED*direction;
     }
 
 
     public void drawImage(Graphics g) {
-        g.drawImage(image, x, y, WIDTH, HEIGHT, null);
+//        g.d
+        g.drawImage(image, x-(WIDTH/2)*direction, y-(HEIGHT/2)*direction, WIDTH*direction, HEIGHT*direction, null);
+//        g.drawImage();
 
     }
 

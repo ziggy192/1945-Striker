@@ -7,7 +7,9 @@ import java.util.ArrayList;
 /**
  * Created by Nghia on 10/8/2016.
  */
-public class EnemyPlane extends Plane implements Runnable {
+public class EnemyPlane extends Plane {
+
+    public static final int FIRE_RATE = 3;
     public static final int WIDTH = 70;
     public static final int HEIGHT = 50;
     public static final int MAX_BULLET_NUM = 10;
@@ -36,18 +38,7 @@ public class EnemyPlane extends Plane implements Runnable {
     }
 
 
-    //    public void newBullet() {
-//        try {
-//
-//            b = new Bullet(x , y + HEIGHT/2 + Bullet.HEIGHT/2,
-//                    ImageIO.read(new File("resources/bullet.png")), -1);
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        bArr.add(b);
-//    }
+
     public void fire() {
         newBullet(x, y + HEIGHT / 2 + Bullet.HEIGHT / 2, -1);
     }
@@ -71,17 +62,5 @@ public class EnemyPlane extends Plane implements Runnable {
         return true;
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            fire();
-        }
 
-
-    }
 }

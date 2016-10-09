@@ -34,10 +34,6 @@ public class GameWindow extends Frame implements Runnable {
                 ImageIO.read(new File("resources/plane1.png")));
 
 
-        Thread threadEnemyShooting = new Thread(enemyPlane);
-        threadEnemyShooting.start();
-
-
         this.setVisible(true);
         this.setSize(BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
         this.addWindowListener(new WindowListener() {
@@ -176,10 +172,16 @@ public class GameWindow extends Frame implements Runnable {
 
     @Override
     public void run() {
+        int count =0;
         while (true) {
 
             try {
                 Thread.sleep(17);
+                count++;
+                if (count== 60/EnemyPlane.FIRE_RATE){
+                    count=0;
+                    enemyPlane.fire();
+                }
                 repaint();
             } catch (InterruptedException e) {
                 e.printStackTrace();
